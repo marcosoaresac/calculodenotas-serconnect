@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Notas - Disciplina</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+        h2 { color: #2c3e50; text-align: center; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        h3 { color: #34495e; margin-top: 20px; font-size: 1.1em; }
+        .input-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 0.9em; }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 1em;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1em;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+        button:hover { background-color: #2980b9; }
+        .result-box {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            display: none;
+        }
+        .status-aprovado { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .status-recuperacao { background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
+        .formula-info { font-size: 0.8em; color: #7f8c8d; margin-top: 5px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Calculadora de Notas</h2>
+
+    <h3>AV1 - Atividades Online (Peso 0.4)</h3>
+    <div class="input-group">
+        <label>AOL 1 (0 a 10)</label>
+        <input type="number" id="aol1" min="0" max="10" step="0.1" value="0">
+    </div>
+    <div class="input-group">
+        <label>AOL 2 (0 a 10)</label>
+        <input type="number" id="aol2" min="0" max="10" step="0.1" value="0">
+    </div>
+    <div class="input-group">
+        <label>AOL 3 (0 a 10)</label>
+        <input type="number" id="aol3" min="0" max="10" step="0.1" value="0">
+    </div>
+    <div class="input-group">
+        <label>AOL 4 (0 a 10)</label>
+        <input type="number" id="aol4" min="0" max="10" step="0.1" value="0">
+    </div>
+
+    <hr>
+
+    <h3>AV2 - Prova (Peso 0.6)</h3>
+    <div class="input-group">
+        <label>Múltipla Escolha (0 a 6)</label>
+        <input type="number" id="av2_obj" min="0" max="6" step="0.1" value="0">
+    </div>
+    <div class="input-group">
+        <label>Dissertativa (0 a 4)</label>
+        <input type="number" id="av2_diss" min="0" max="4" step="0.1" value="0">
+    </div>
+
+    <button onclick="calcularNota()">Calcular Média Final</button>
+
+    <div id="resultado" class="result-box">
+        <strong>Resultado Detalhado:</strong>
+        <div id="detalhes"></div>
+        <h3 id="notaFinalTexto"></h3>
+        <p id="statusTexto"></p>
+    </div>
+</div>
+
+<script>
+    function calcularNota() {
+        // Captura valores AV1
+        const aol1 = parseFloat(document.getElementById('aol1').value) || 0;
+        const aol2 = parseFloat(document.getElementById('aol2').value) || 0;
+        const aol3 = parseFloat(document.getElementById('aol3').value) || 0;
+        const aol4 = parseFloat(document.getElementById('aol4').value) || 0;
+
+        // Captura valores AV2
+        const av2_obj = parseFloat(document.getElementById('av2_obj').value) || 0;
+        const av2_diss = parseFloat(document.getElementById('av2_diss').value) || 0;
+
+        // Cálculos conforme regras
+        const mediaAOL = (aol1 + aol2 + aol3 + aol4) / 4;
+        const notaAV1 = mediaAOL * 0.4;
+
+        const somaAV2 = av2_obj + av2_diss;
+        const notaAV2 = somaAV2 * 0.6;
+
+        const notaFinal = notaAV1 + notaAV2;
+
+        // Exibição dos resultados
+        const divRes = document.getElementById('resultado');
+        const divDet = document.getElementById('detalhes');
+        const h3Final = document.getElementById('notaFinalTexto');
+        const pStatus = document.getElementById('statusTexto');
+
+        divRes.style.display = 'block';
+        
+        divDet.innerHTML = `
+            <p>Pontos AV1 (Peso 0.4): ${notaAV1.toFixed(2)}</p>
+            <p>Pontos AV2 (Peso 0.6): ${notaAV2.toFixed(2)}</p>
+        `;
+
+        h3Final.innerText = `Nota Final: ${notaFinal.toFixed(2)}`;
+
+        if (notaFinal >= 7.0) {
+            divRes.className = 'result-box status-aprovado';
+            pStatus.innerHTML = "<strong>Status: APROVADO!</strong> 🎉";
+        } else {
+            divRes.className = 'result-box status-recuperacao';
+            pStatus.innerHTML = "<strong>Status: EM RECUPERAÇÃO (AF).</strong><br>A média 7.0 não foi atingida.";
+        }
+    }
+</script>
+
+</body>
+</html>
